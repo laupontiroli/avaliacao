@@ -5,8 +5,12 @@ import com.example.avaliacao.avaliacao.service.AvaliacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.List;
 
 @Controller("/avaliacao")
 public class AvaliacaoController {
@@ -17,5 +21,11 @@ public class AvaliacaoController {
     public ResponseEntity<Avaliacao> criarAvaliacao(@RequestBody Avaliacao avaliacao) {
         Avaliacao avaliacaoSalva = avaliacaoService.criar(avaliacao);
         return ResponseEntity.ok(avaliacaoSalva);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<Avaliacao>> listarAvaliacoes(@RequestParam String idFilme, @RequestParam(required = false) String ordenacao) {
+        List<Avaliacao> avaliacoes = avaliacaoService.listar(idFilme, ordenacao);
+        return ResponseEntity.ok(avaliacoes);
     }
 }

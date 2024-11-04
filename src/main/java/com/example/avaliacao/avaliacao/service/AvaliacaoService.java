@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -53,6 +55,20 @@ public class AvaliacaoService {
         avaliacao.setId(UUID.randomUUID().toString());
 
         return avaliacaoRepository.save(avaliacao);
+    }
+
+    public List<Avaliacao> listar(String idFilme, String ordenacao) {
+        if (idFilme != null && ordenacao == null) {
+            return avaliacaoRepository.findByIdFilme(idFilme);
+        }
+        if (idFilme != null && ordenacao.equals("nota")) {
+            return avaliacaoRepository.findByIdFilmeOrderByNota(idFilme);
+        }
+        if (idFilme != null && ordenacao.equals("data")) {
+            return avaliacaoRepository.findByIdFilmeOrderByData(idFilme);
+        }
+
+        return avaliacaoRepository.findAll();
     }
 
 
