@@ -1,6 +1,7 @@
 package com.example.avaliacao.avaliacao.service;
 
 import com.example.avaliacao.avaliacao.model.Avaliacao;
+import com.example.avaliacao.avaliacao.model.EditarAvaliacaoDTO;
 import com.example.avaliacao.avaliacao.repository.AvaliacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -59,5 +61,16 @@ public class AvaliacaoService {
         avaliacaoRepository.deleteById(id);
     }
 
+    public Avaliacao atualizar(EditarAvaliacaoDTO avaliacaoDTO){
+
+        Optional<Avaliacao> op = avaliacaoRepository.findById(avaliacaoDTO.getId());
+        if (op.isPresent()){
+            Avaliacao avaliacao = op.get();
+            avaliacao.setComentario(avaliacaoDTO.getComentario());
+            avaliacao.setNota(avaliacaoDTO.getNota());
+            return avaliacaoRepository.save(avaliacao);
+        }
+        throw new RuntimeException("Avalicao não encontrada");
+    }
 
 }

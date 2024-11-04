@@ -15,9 +15,8 @@ public class Avaliacao {
     @Id
     String id;
     String comentario;
-    Integer nota;
+    Float nota;
     String idFilme;
     String email;
     LocalDateTime data;
-    String idUsuario;
 }
