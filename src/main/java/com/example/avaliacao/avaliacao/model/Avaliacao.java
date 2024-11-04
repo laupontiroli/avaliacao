@@ -19,5 +19,5 @@ public class Avaliacao {
     String idFilme;
     String email;
     LocalDateTime data;
-
+    String idUsuario;
 }
