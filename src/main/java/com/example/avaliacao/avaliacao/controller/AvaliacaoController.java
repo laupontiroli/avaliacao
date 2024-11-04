@@ -1,14 +1,12 @@
 package com.example.avaliacao.avaliacao.controller;
 
 import com.example.avaliacao.avaliacao.model.Avaliacao;
+import com.example.avaliacao.avaliacao.model.EditarAvaliacaoDTO;
 import com.example.avaliacao.avaliacao.service.AvaliacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -28,10 +26,23 @@ public class AvaliacaoController {
         Double media = avaliacaoService.mediaAvaliacoes(idFilme);
         return ResponseEntity.ok(media);
     }
+
     @GetMapping
     public ResponseEntity<List<Avaliacao>> listarAvaliacoes(@RequestParam String idFilme, @RequestParam(required = false) String ordenacao) {
         List<Avaliacao> avaliacoes = avaliacaoService.listar(idFilme, ordenacao);
         return ResponseEntity.ok(avaliacoes);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarAvaliacao(@PathVariable String id) {
+        avaliacaoService.deletar(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    @PutMapping()
+    public ResponseEntity<Avaliacao> editarAvaliacao(@RequestBody EditarAvaliacaoDTO avaliacao) {
+        Avaliacao avaliacaoEditada = avaliacaoService.atualizar(avaliacao);
+        return ResponseEntity.ok(avaliacaoEditada);
     }
 
 }
