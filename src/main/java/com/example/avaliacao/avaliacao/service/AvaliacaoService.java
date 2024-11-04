@@ -3,6 +3,9 @@ package com.example.avaliacao.avaliacao.service;
 import com.example.avaliacao.avaliacao.model.Avaliacao;
 import com.example.avaliacao.avaliacao.model.EditarAvaliacaoDTO;
 import com.example.avaliacao.avaliacao.repository.AvaliacaoRepository;
+import com.example.avaliacao.catalogo.FilmeService;
+import com.example.avaliacao.visulizacao.Historico;
+import com.example.avaliacao.visulizacao.HistoricoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,36 +22,18 @@ public class AvaliacaoService {
     @Autowired
     AvaliacaoRepository avaliacaoRepository;
 
-    public Boolean verificaFilmeExiste(String id) {
-        RestTemplate restTemplate = new RestTemplate();
+    @Autowired
+    FilmeService filmeService;
 
-        try {
-            ResponseEntity<Object> response = restTemplate.getForEntity("http://localhost:8082/filme/" + id, Object.class);
-
-            return response.getStatusCode().is2xxSuccessful();
-        } catch (Exception e) {
-            return false;
-        }
-    }
-
-    public Boolean verificaClienteAssistiu(String email) {
-        RestTemplate restTemplate = new RestTemplate();
-
-        try {
-            ResponseEntity<Object> response = restTemplate.getForEntity("http://localhost:8081/cliente/" + email, Object.class);
-
-            return response.getStatusCode().is2xxSuccessful();
-        } catch (Exception e) {
-            return false;
-        }
-    }
+    @Autowired
+    HistoricoService historicoService;
 
     public Avaliacao criar(Avaliacao avaliacao) {
-        if (!verificaFilmeExiste(avaliacao.getIdFilme())) {
+        if (!filmeService.verificaFilmeExiste(avaliacao.getIdFilme())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Filme não encontrado");
         }
 
-        if (!verificaClienteAssistiu(avaliacao.getIdUsuario())) {
+        if (!historicoService.verificaClienteAssistiu(avaliacao.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cliente não assistiu o filme");
         }
 
@@ -70,7 +55,7 @@ public class AvaliacaoService {
             avaliacao.setNota(avaliacaoDTO.getNota());
             return avaliacaoRepository.save(avaliacao);
         }
-        throw new RuntimeException("Avalicao não encontrada");
+    throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Avaliação não encontrada");
     }
 
 }
