@@ -12,7 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
-
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,8 +42,30 @@ public class AvaliacaoService {
         return avaliacaoRepository.save(avaliacao);
     }
 
+    public List<Avaliacao> listar(String idFilme, String ordenacao) {
+        if (idFilme != null && ordenacao == null) {
+            return avaliacaoRepository.findByIdFilme(idFilme);
+        }
+        if (idFilme != null && ordenacao.equals("nota")) {
+            return avaliacaoRepository.findByIdFilmeOrderByNota(idFilme);
+        }
+        if (idFilme != null && ordenacao.equals("data")) {
+            return avaliacaoRepository.findByIdFilmeOrderByData(idFilme);
+        }
+
+        return avaliacaoRepository.findAll();
+    }
+
     public void deletar(String id) {
         avaliacaoRepository.deleteById(id);
+    }
+
+    public Double mediaAvaliacoes(String idFilme) {
+        return avaliacaoRepository.findAll().stream()
+                .filter(avaliacao -> avaliacao.getIdFilme().equals(idFilme))
+                .mapToDouble(Avaliacao::getNota)
+                .average()
+                .orElse(0);
     }
 
     public Avaliacao atualizar(EditarAvaliacaoDTO avaliacaoDTO){
