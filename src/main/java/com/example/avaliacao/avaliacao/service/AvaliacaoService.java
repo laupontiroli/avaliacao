@@ -22,6 +22,9 @@ public class AvaliacaoService {
         return avaliacaoRepository.save(avaliacao);
     }
 
+    public void deletar(String id) {
+        avaliacaoRepository.deleteById(id);
+    }
 
 
 }
