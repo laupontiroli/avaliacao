@@ -1,6 +1,7 @@
 package com.example.avaliacao.avaliacao.service;
 
 import com.example.avaliacao.avaliacao.model.Avaliacao;
+import com.example.avaliacao.avaliacao.model.EditarAvaliacaoDTO;
 import com.example.avaliacao.avaliacao.repository.AvaliacaoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -8,9 +9,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -31,11 +31,11 @@ public class AvaliacaoService {
         }
     }
 
-    public Boolean verificaClienteAssistiu(String id) {
+    public Boolean verificaClienteAssistiu(String email) {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            ResponseEntity<Object> response = restTemplate.getForEntity("http://localhost:8081/cliente/" + id, Object.class);
+            ResponseEntity<Object> response = restTemplate.getForEntity("http://localhost:8081/cliente/" + email, Object.class);
 
             return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
@@ -48,7 +48,7 @@ public class AvaliacaoService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Filme não encontrado");
         }
 
-        if (!verificaClienteAssistiu(avaliacao.getIdUsuario())) {
+        if (!verificaClienteAssistiu(avaliacao.getEmail())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cliente não assistiu o filme");
         }
 
@@ -71,6 +71,20 @@ public class AvaliacaoService {
         return avaliacaoRepository.findAll();
     }
 
+    public void deletar(String id) {
+        avaliacaoRepository.deleteById(id);
+    }
 
+    public Avaliacao atualizar(EditarAvaliacaoDTO avaliacaoDTO){
+
+        Optional<Avaliacao> op = avaliacaoRepository.findById(avaliacaoDTO.getId());
+        if (op.isPresent()){
+            Avaliacao avaliacao = op.get();
+            avaliacao.setComentario(avaliacaoDTO.getComentario());
+            avaliacao.setNota(avaliacaoDTO.getNota());
+            return avaliacaoRepository.save(avaliacao);
+        }
+        throw new RuntimeException("Avalicao não encontrada");
+    }
 
 }
