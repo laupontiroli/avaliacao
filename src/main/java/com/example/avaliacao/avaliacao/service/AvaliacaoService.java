@@ -59,5 +59,12 @@ public class AvaliacaoService {
         avaliacaoRepository.deleteById(id);
     }
 
+    public Double mediaAvaliacoes(String idFilme) {
+        return avaliacaoRepository.findAll().stream()
+                .filter(avaliacao -> avaliacao.getIdFilme().equals(idFilme))
+                .mapToInt(Avaliacao::getNota)
+                .average()
+                .orElse(0);
+    }
 
 }
