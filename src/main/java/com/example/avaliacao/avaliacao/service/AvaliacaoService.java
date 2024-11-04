@@ -31,11 +31,11 @@ public class AvaliacaoService {
         }
     }
 
-    public Boolean verificaClienteAssistiu(String id) {
+    public Boolean verificaClienteAssistiu(String email) {
         RestTemplate restTemplate = new RestTemplate();
 
         try {
-            ResponseEntity<Object> response = restTemplate.getForEntity("http://localhost:8081/cliente/" + id, Object.class);
+            ResponseEntity<Object> response = restTemplate.getForEntity("http://localhost:8081/cliente/" + email, Object.class);
 
             return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
