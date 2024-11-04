@@ -5,6 +5,8 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.time.LocalDateTime;
+
 @Document
 @Getter
 @Setter
@@ -16,5 +18,6 @@ public class Avaliacao {
     Integer nota;
     String idFilme;
     String email;
-
+    LocalDateTime data;
+    String idUsuario;
 }
