@@ -10,6 +10,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.List;
+
 @Controller("/avaliacao")
 public class AvaliacaoController {
     @Autowired
@@ -20,9 +22,16 @@ public class AvaliacaoController {
         Avaliacao avaliacaoSalva = avaliacaoService.criar(avaliacao);
         return ResponseEntity.ok(avaliacaoSalva);
     }
+
     @GetMapping("/media")
     public ResponseEntity<Double> mediaAvaliacoes(@RequestParam String idFilme) {
         Double media = avaliacaoService.mediaAvaliacoes(idFilme);
         return ResponseEntity.ok(media);
     }
+    @GetMapping
+    public ResponseEntity<List<Avaliacao>> listarAvaliacoes(@RequestParam String idFilme, @RequestParam(required = false) String ordenacao) {
+        List<Avaliacao> avaliacoes = avaliacaoService.listar(idFilme, ordenacao);
+        return ResponseEntity.ok(avaliacoes);
+    }
+
 }
