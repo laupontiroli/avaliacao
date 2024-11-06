@@ -10,14 +10,15 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Controller("/avaliacao")
+@RestController()
+@RequestMapping("/avaliacao")
 public class AvaliacaoController {
     @Autowired
     private AvaliacaoService avaliacaoService;
 
     @PostMapping
-    public ResponseEntity<Avaliacao> criarAvaliacao(@RequestBody Avaliacao avaliacao) {
-        Avaliacao avaliacaoSalva = avaliacaoService.criar(avaliacao);
+    public ResponseEntity<Avaliacao> criarAvaliacao(@RequestBody Avaliacao avaliacao, @RequestHeader(name = "Authorization") String jwtToken) {
+        Avaliacao avaliacaoSalva = avaliacaoService.criar(avaliacao,jwtToken);
         return ResponseEntity.ok(avaliacaoSalva);
     }
 
@@ -28,7 +29,7 @@ public class AvaliacaoController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Avaliacao>> listarAvaliacoes(@RequestParam String idFilme, @RequestParam(required = false) String ordenacao) {
+    public ResponseEntity<List<Avaliacao>> listarAvaliacoes(@RequestParam(required = false) String idFilme, @RequestParam(required = false) String ordenacao) {
         List<Avaliacao> avaliacoes = avaliacaoService.listar(idFilme, ordenacao);
         return ResponseEntity.ok(avaliacoes);
     }

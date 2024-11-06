@@ -1,14 +1,19 @@
-package com.example.avaliacao.catalogo;
+package com.example.avaliacao.visulizacao;
 
+import com.example.avaliacao.catalogo.Filme;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
+
 @Service
-public class FilmeService {
-    public Boolean verificaFilmeExiste(String email, String jwtToken) {
+public class VisualizacaoService {
+    public Boolean verificaClienteAssistiu(String email, String jwtToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", jwtToken);
@@ -16,8 +21,13 @@ public class FilmeService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<Filme> response = restTemplate.exchange("http://3.81.36.34:8082/filme/" + email, HttpMethod.GET, entity, Filme.class);
 
+            ResponseEntity<List<Visualizacao>> response = restTemplate.exchange(
+                    "http://3.92.236.111:8083/visualizacoes/usuarios",
+                    HttpMethod.GET,
+                    entity,
+                    new ParameterizedTypeReference<List<Visualizacao>>() {}
+            );
             return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
             return false;

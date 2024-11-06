@@ -4,13 +4,12 @@ import com.example.avaliacao.avaliacao.model.Avaliacao;
 import com.example.avaliacao.avaliacao.model.EditarAvaliacaoDTO;
 import com.example.avaliacao.avaliacao.repository.AvaliacaoRepository;
 import com.example.avaliacao.catalogo.FilmeService;
-import com.example.avaliacao.visulizacao.Historico;
-import com.example.avaliacao.visulizacao.HistoricoService;
+import com.example.avaliacao.visulizacao.VisualizacaoService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestTemplate;
 import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 import java.util.Optional;
@@ -26,14 +25,16 @@ public class AvaliacaoService {
     FilmeService filmeService;
 
     @Autowired
-    HistoricoService historicoService;
+    VisualizacaoService visualizacaoService;
 
-    public Avaliacao criar(Avaliacao avaliacao) {
-        if (!filmeService.verificaFilmeExiste(avaliacao.getIdFilme())) {
+    public Avaliacao criar(Avaliacao avaliacao, String jwtToken) {
+
+
+        if (!filmeService.verificaFilmeExiste(avaliacao.getIdFilme(),jwtToken)) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Filme não encontrado");
         }
 
-        if (!historicoService.verificaClienteAssistiu(avaliacao.getEmail())) {
+        if (!visualizacaoService.verificaClienteAssistiu(avaliacao.getEmail(),jwtToken)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cliente não assistiu o filme");
         }
 
