@@ -13,7 +13,7 @@ import java.util.List;
 
 @Service
 public class VisualizacaoService {
-    public Boolean verificaClienteAssistiu(String email, String jwtToken) {
+    public Boolean verificaClienteAssistiu( String jwtToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
         headers.set("Authorization", jwtToken);
