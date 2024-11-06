@@ -16,7 +16,8 @@ public class FilmeService {
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         try {
-            ResponseEntity<Filme> response = restTemplate.exchange("http://3.81.36.34:8082/filmes/" + id, HttpMethod.GET, entity, Filme.class);
+            ResponseEntity<Filme> response = restTemplate.exchange("http://3.81.36.34:8080/filmes/" + email, HttpMethod.GET, entity, Filme.class);
+
 
             return response.getStatusCode().is2xxSuccessful();
         } catch (Exception e) {
