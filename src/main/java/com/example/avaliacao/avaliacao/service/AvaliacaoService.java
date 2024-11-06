@@ -34,7 +34,7 @@ public class AvaliacaoService {
             throw new ResponseStatusException(HttpStatus.HTTP_VERSION_NOT_SUPPORTED, "Filme não encontrado");
         }
 
-        if (!visualizacaoService.verificaClienteAssistiu(avaliacao.getEmail(),jwtToken)) {
+        if (!visualizacaoService.verificaClienteAssistiu(jwtToken)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cliente não assistiu o filme");
         }
 
